@@ -47,16 +47,16 @@ namespace RPSLS
             //Need condition if input is a number and can be parsed but out of range.
             //Need a catch conditional if the user input cannot be parsed at all. 
         {   
-            Console.WriteLine($"How many 'Human' players want to play? 1 or 2\n");
+            Console.WriteLine($"How many 'Human' players want to play? 0 (BotVsBot) or 1(HumanVsBot) or 2(HumanVsHuman)\n");
             if (int.TryParse(Console.ReadLine(), out int number))
             {
-                if (number == 1 || number == 2)
+                if (number == 0 || number == 1 || number == 2)
                 {
                     return number;
                 }
                 else 
                 {
-                    Console.WriteLine("Your input is out of range. Please choose 1 or 2!");
+                    Console.WriteLine("Your input is out of range. Please choose 0 or 1 or 2!");
                     return ChooseNumberOfHumanPlayers();
                 }
             }
@@ -89,27 +89,87 @@ namespace RPSLS
                 string playerTwoName = Console.ReadLine();
                 playerTwo = new HumanPlayer(playerTwoName);
             }
+            //If no humans chosen and Robots will compete. 
+            else if (numberOfHumanPlayers == 0)
+            {
+                playerOne = new BotPlayer("RoboKiller");
+                playerTwo = new BotPlayer("Superbot");
+            }
             //Instantiate each player object to grab the name variable. 
             Console.WriteLine($"This match is best of 3 between {playerOne.name} and {playerTwo.name}");
         }
 
         public void CompareGestures()
-
+            //Need a loop to run throuh each round to compare scores between players. 
+            //Need to call the function for each player to choose a gesture.
+            //Need conditionals to compare gestures for each player.
+            //Need to add a point to each playerScore for each round won.
+            //Loop ends when a player reaches 3 points.
         {
-
+            while (playerOne.score < 3 && playerTwo.score < 3)
+            {
+                Console.WriteLine($"\nNew Round!\n");
+                playerOne.ChooseGesture();
+                playerTwo.ChooseGesture();
+                //Conditional to compare identical gestures.
+                if (playerOne.chosenGesture == playerTwo.chosenGesture)
+                {
+                    Console.WriteLine("Round Tied");
+                    Console.WriteLine("No Points Awarded!");
+                    Console.WriteLine($"Score is {playerOne.name} has {playerOne.score} & {playerTwo.name} has {playerTwo.score} \n");
+                }
+                //Conditional to compare playerOne gesture to all winning hands.
+                else if ((playerOne.chosenGesture == "rock" && playerTwo.chosenGesture == "scissors") ||
+                    (playerOne.chosenGesture == "rock" && playerTwo.chosenGesture == "lizard") ||
+                    (playerOne.chosenGesture == "paper" && playerTwo.chosenGesture == "rock") ||
+                    (playerOne.chosenGesture == "paper" && playerTwo.chosenGesture == "spock") ||
+                    (playerOne.chosenGesture == "scissors" && playerTwo.chosenGesture == "paper") ||
+                    (playerOne.chosenGesture == "scissors" && playerTwo.chosenGesture == "lizard") ||
+                    (playerOne.chosenGesture == "lizard" && playerTwo.chosenGesture == "paper") ||
+                    (playerOne.chosenGesture == "lizard" && playerTwo.chosenGesture == "spock") ||
+                    (playerOne.chosenGesture == "spock" && playerTwo.chosenGesture == "scissors") ||
+                    (playerOne.chosenGesture == "spock" && playerTwo.chosenGesture == "rock"))
+                {
+                    //If any of the above conditionals is true player 1 gets a point. 
+                    playerOne.score++;
+                    Console.WriteLine($"{playerOne.name} wins this round");
+                    Console.WriteLine($"Score is {playerOne.name} has {playerOne.score} & {playerTwo.name} has {playerTwo.score}\n");
+                }
+                //Conditional to add a point to player 2 if the first 2 conditions are not met.
+                else
+                {
+                    playerTwo.score++;
+                    Console.WriteLine($"{playerTwo.name} wins this round");
+                    Console.WriteLine($"Score is {playerOne.name} has {playerOne.score} & {playerTwo.name} has {playerTwo.score}\n");
+                }
+            }
         }
 
         public void DisplayGameWinner()
         {
+            if (playerOne.score == 3 )
+            {
+                Console.WriteLine($"{playerOne.name} is the Champ.");
+            }
+            else
+            {
+                Console.WriteLine($"{playerTwo.name} is the Champ.");
+            }
 
         }
 
         public void RunGame()
             //Call each method in order they need to execute. 
+            //My while loop occurs in the CompareGestures function. I could do a do while loop here in my rungame to 
+            //do compare gestures while the score is < 3. 
         {
             WelcomeMessage();
+            //Variable to hold the value of how many human players are in the game. 
             int numPlayers = ChooseNumberOfHumanPlayers();
+            //Use the variable to pass in as a parameter for instantiating players. 
             CreatePlayerObjects(numPlayers);
+            CompareGestures();
+            DisplayGameWinner();
 
         }
     }

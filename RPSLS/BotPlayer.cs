@@ -9,7 +9,7 @@ namespace RPSLS
     internal class BotPlayer : Player 
     {
         //Build a constructor for this player.
-        public BotPlayer(string name) : base("RoboKiller") 
+        public BotPlayer(string name) : base(name) 
         {
          
         }
@@ -22,7 +22,9 @@ namespace RPSLS
             //Choice represents the index that is chosen when we randomize. 
             int choice = random.Next(gestures.Count);
             //ChosenGesture holds the chosen index so we can compare it to the other players gesture. 
-            chosenGesture = gestures[choice];
+            //Used ToLower to have chosenGesture not capitalized
+            chosenGesture = gestures[choice].ToLower();
+            Console.WriteLine($"{name} throws {chosenGesture}");
         }
     }
 }
