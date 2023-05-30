@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,11 +40,32 @@ namespace RPSLS
         }
 
         public int ChooseNumberOfHumanPlayers()
-            //Have a user choose between 1 or 2 human players. Need a variable to hold the user choice.
-        {
-            Console.WriteLine("How many 'Human' players want to play? 1 or 2");
-            int numHumans = Convert.ToInt32(Console.ReadLine());
-            return numHumans;
+            //Have a user choose between 1 or 2 human players.
+            //Need to convert the user input from a string to an int. 
+            //Data validation needed
+            //Need to add conditional to handle if user input is a number and can be parsed.
+            //Need condition if input is a number and can be parsed but out of range.
+            //Need a catch conditional if the user input cannot be parsed at all. 
+        {   
+            Console.WriteLine($"How many 'Human' players want to play? 1 or 2\n");
+            if (int.TryParse(Console.ReadLine(), out int number))
+            {
+                if (number == 1 || number == 2)
+                {
+                    return number;
+                }
+                else 
+                {
+                    Console.WriteLine("Your input is out of range. Please choose 1 or 2!");
+                    return ChooseNumberOfHumanPlayers();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Your input is invalid. Please enter a number value.");
+                return ChooseNumberOfHumanPlayers();
+            }
+
         }
 
         public void CreatePlayerObjects(int numberOfHumanPlayers)
@@ -52,15 +74,27 @@ namespace RPSLS
             //If only 1 human player selected. 
             if (numberOfHumanPlayers == 1)
             {
-                Console.WriteLine("Please enter your name:");
+                Console.WriteLine("Please enter Player's name:");
                 string playerOneName = Console.ReadLine();
                 playerOne = new HumanPlayer(playerOneName);
                 playerTwo = new BotPlayer("RoboKiller");
             }
-
+            //If 2 human players are selected. 
+            else if (numberOfHumanPlayers == 2)
+            {
+                Console.WriteLine("Please enter Player One's name:");
+                string playerOneName = Console.ReadLine();
+                playerOne = new HumanPlayer(playerOneName);
+                Console.WriteLine("Please enter Player Two's name:");
+                string playerTwoName = Console.ReadLine();
+                playerTwo = new HumanPlayer(playerTwoName);
+            }
+            //Instantiate each player object to grab the name variable. 
+            Console.WriteLine($"This match is best of 3 between {playerOne.name} and {playerTwo.name}");
         }
 
         public void CompareGestures()
+
         {
 
         }
